@@ -1,9 +1,9 @@
 # pgp
 A simple and easy to use client-side PGP key generator
 
-**Link:** http://heiswayi.github.io/pgp/
+**URL:** http://heiswayi.github.io/pgp/
 
-### About this program
+## About this program
 
 Pretty Good Privacy (PGP) is a data encryption and decryption computer program that provides cryptographic privacy and authentication for data communication. PGP is often used for signing, encrypting, and decrypting texts, e-mails, files, directories, and whole disk partitions and to increase the security of e-mail communications. It was created by Phil Zimmermann in 1991. PGP and similar software follow the OpenPGP standard (RFC 4880) for encrypting and decrypting data. _Source: [Wikipedia](https://en.wikipedia.org/wiki/Pretty_Good_Privacy)_
 
@@ -11,7 +11,7 @@ This website only provides a simple and easy to use tool for people to generate 
 
 If you have any inquiry, just [create an issue here](https://github.com/heiswayi/pgp/issues/new).
 
-### Frequently Asked Questions
+## Frequently Asked Questions
 
 **Is it safe for me to generate my PGP keys through your website?**
 
@@ -33,6 +33,6 @@ If you have any inquiry, just [create an issue here](https://github.com/heiswayi
 
 > PGP key generation is a resource intensive process. As a result, your may experience increased CPU and memory usage on your device, which can result in performance issues. The performance impact depends on the hardware capabilities of your device.
 
-### License
+## License
 
-[MIT License](http://heiswayi.github.io/mit-license)
+MIT License
