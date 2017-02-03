@@ -81,7 +81,7 @@
 
                 <div class="page-header">
                     <h1 class="title">PGP Key Generator</h1>
-                    A simple and easy to use client-side PGP key generator
+                    Safer and easy-to-use client-side PGP key generator
                 </div>
 
                 <div class="tabbable">
@@ -120,7 +120,7 @@
                                                     <label class="sr-only" for="email">Email</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></div>
-                                                        <input class="form-control" name="email" placeholder="your@domain.com" type="email" id="email" title="Enter a valid email address" required>
+                                                        <input class="form-control" name="email" placeholder="you@domain.com" type="email" id="email" title="Enter a valid email address" required>
                                                         <div class="input-group-addon">Required</div>
                                                     </div>
                                                     <span id="helpBlock" class="help-block"><a href="#" data-toggle="popover" title="Email address" data-content="Your email address will be included as public information in your public PGP key, so your public key can be easily imported by third-party PGP software. If you do not supply your email address, your PGP decryption software may be unable to link your email address to your public PGP key, and therefore unable to automatically encrypt/decrypt email messages. As a result, you will have to manually decrypt messages each time you receive a PGP-encrypted message.">Email address: Why it is required?</a></span>
@@ -181,7 +181,7 @@
                                                         <input class="form-control" name="passphrase" placeholder="Passphrase" type="password" id="passphrase" pattern=".{5,}" title="Enter a passphrase; at least 5 characters" required>
                                                         <div class="input-group-addon">Required</div>
                                                     </div>
-                                                    <span id="helpBlock" class="help-block"><a href="#" data-toggle="popover" title="Passphrase" data-content="Passphrase is a like a password to protect your private PGP key. This password offers an extra layer of protection in case someone manage to steal your public PGP key. Please pick a password you will remember, because if you forget this password, there is no way to recover your password and no way for you to decrypt PGP messages sent to you!">Passphrase: What is this?</a></span>
+                                                    <span id="helpBlock" class="help-block"><a href="#" data-toggle="popover" title="Passphrase" data-content="Passphrase is a like a password to protect your private PGP key. This password offers an extra layer of protection in case someone manage to steal your private PGP key. Please pick a password you will remember, because if you forget this password, there is no way to recover your password and no way for you to decrypt PGP-encrypted messages sent to you!">Passphrase: What is this?</a></span>
                                                 </div>
 
                                                 <input type="submit" value="Generate keys" id="generate_keys_btn" class="btn btn-primary btn-lg btn-block send" name="send" />
@@ -213,7 +213,7 @@
                                         </div>
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" name="privkey" placeholder="Your private key will be generated here." id="privkey" readonly></textarea>
-                                            <span id="helpBlock" class="help-block"><a href="#" class="btn btn-danger download disabled" title="This button will be enabled after you generate your key pair." name="download_priv_key" id="download_priv_key"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download private key (.ASC file)</a> <a href="#" class="btn btn-link" data-toggle="popover" title="Private key" data-content="Save your private PGP key in a file on your computer and keep it as confidential as possible. You will need it to decrypt PGP messages sent to you using your public PGP key.">Learn More</a>
+                                            <span id="helpBlock" class="help-block"><a href="#" class="btn btn-danger download disabled" title="This button will be enabled after you generate your key pair." name="download_priv_key" id="download_priv_key"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download private key (.ASC file)</a> <a href="#" class="btn btn-link" data-toggle="popover" title="Private key" data-content="Save your private PGP key in a file on your computer and keep it as confidential as possible. You will need it to decrypt PGP-encrypted messages sent to you using your public PGP key.">Learn More</a>
                                             </span>
                                         </div>
                                     </div>
@@ -235,7 +235,7 @@
                                     </div>
                                     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="panel-body">
-                                            Yes, it is as safe as generating your keys using a local application. The key generation on this website is done client-side only. This means the key pairs are generated entirely in your web browser and they never leave your computer. This website never sees any key related data or the key itself.
+                                            Yes, it is as safe as generating your keys using a local application. The key generation on this website is done using client-side only. This means the key pairs are generated entirely in your web browser and they never leave your computer. This website never sees any key-related data or the key itself.
                                         </div>
                                     </div>
                                 </div>
@@ -249,7 +249,7 @@
                                     </div>
                                     <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
                                         <div class="panel-body">
-                                            Sure. For starters, it enforces using a passphrase with each key generated. This ensures some level of protection if your key is ever stolen. It also automatically generates two subkeys for you, one for signing and the other for encryption. You can use your subkeys to sign and encrypt data and keep your private key safe. The bit length of generated subkeys will be identical to the length you specified for the primary key. The primary key it generates for you never expires. You can, however, set the expiration date on the generated subkeys using the 'Expire' option in the key generation form.
+                                            Sure. For starters, it enforces using a passphrase with each key generated. This ensures some level of protection if your private key is ever stolen. It also automatically generates two subkeys for you, one for signing and the other for encryption. You can use your subkeys to sign and encrypt data and keep your private key safe. The bit length of generated subkeys will be identical to the length you specified for the primary key. The primary key it generates for you never expires. You can, however, set the expiration date on the generated subkeys using the 'Expire' option in the key generation form.
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@
                                     </div>
                                     <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
                                         <div class="panel-body">
-                                            No, I don't keep or log any information you submitted through the generator form. The only logging that occurs when you visit this website is performed by Google Analytics, which helps me keep track of the number of people visiting the site monthly.
+                                            No, I don't keep or log any information you submitted through the generator form. The only logging that occurs when you visit this website is performed by Google Analytics, which helps me keep track of the number of people visiting the site monthly. Plus, this website is hosted entirely using <a href="https://pages.github.com/">GitHub Pages</a> and the source code for this website is available in a <a href="https://github.com/heiswayi/pgp">GitHub repository here</a>.
                                         </div>
                                     </div>
                                 </div>
@@ -300,9 +300,9 @@
                         <div role="tabpanel" class="tab-pane" id="about">
                            <blockquote>Pretty Good Privacy (PGP) is a data encryption and decryption computer program that provides cryptographic privacy and authentication for data communication. PGP is often used for signing, encrypting, and decrypting texts, e-mails, files, directories, and whole disk partitions and to increase the security of e-mail communications. It was created by Phil Zimmermann in 1991. PGP and similar software follow the OpenPGP standard (RFC 4880) for encrypting and decrypting data. <em>Source: <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">Wikipedia</a></em></blockquote>
 
-                            <p>This site only provides a simple and easy to use tool for people to generate PGP keys with. Today, the common methods for generating keys still involve going to a command prompt of a Linux/Unix machine and using the GPG utility, or installing a PGP compatible application on your desktop. I wanted to provide an easier way to generate keys. None of this would be possible without the awesome Open Source software I'm utilizing. I'm using <a href="https://keybase.io/">KeyBase's</a> awesome JavaScript implementation of PGP (<a href="https://github.com/keybase/kbpgp">kbpgp</a>). For file saving capabilities I am utilizing <a href="https://github.com/eligrey">Eli Grey's</a> wonderful <a href="https://github.com/eligrey/FileSaver.js/">FileSaver.js</a> interface.</p>
+                            <p>This site only provides a simple, safer and easy-to-use tool for people who want to generate a pair of PGP keys or more. Today, some common methods for generating keys still involve going to a command prompt of a Linux/Unix machine and using the GPG utility, or installing a PGP compatible application on your desktop, so I wanted to provide an easier way to generate keys. None of this would be possible without the awesome open source software that I'm using which is <a href="https://keybase.io/">KeyBase's</a> awesome JavaScript implementation of PGP (<a href="https://github.com/keybase/kbpgp">kbpgp</a>). While for file saving capabilities, I am using <a href="https://github.com/eligrey">Eli Grey's</a> wonderful <a href="https://github.com/eligrey/FileSaver.js/">FileSaver.js</a> interface.</p>
 
-                            <p>This site is Open Source and the source code are available on <a href="https://github.com/heiswayi/pgp">GitHub</a>. If you have any inquiry or problem, you may <a href="https://github.com/heiswayi/pgp/issues">create an issue here</a>.</p>
+                            <p>This site is open source and the source code are available on <a href="https://github.com/heiswayi/pgp">GitHub</a> under <a href="http://heiswayi.github.io/mit-license">MIT License</a>. If you have any inquiry or problem, you may <a href="https://github.com/heiswayi/pgp/issues">create an issue here</a>.</p>
                         </div>
                     </div>
 
@@ -311,6 +311,16 @@
             </div>
         </div>
     </div>
+
+    <script>
+    $('body').on('click', function (e) {
+      //did not click a popover toggle or popover
+      if ($(e.target).data('toggle') !== 'popover'
+        && $(e.target).parents('.popover.in').length === 0) {
+        $('[data-toggle="popover"]').popover('hide');
+      }
+    });
+    </script>
 
 </body>
 
