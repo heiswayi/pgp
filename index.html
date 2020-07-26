@@ -7,95 +7,69 @@
     <!-- Set charset to UTF-8 -->
     <meta charset="utf-8">
 
-    <title>PGP Key Generator</title>
+    <div class="title">
+        <title>PGP Suite</title>
+    </div>
 
-    <meta name="description" content="A simple and easy to use client-side PGP key generator">
+    <meta name="description" content="A simple and easy to use client-side PGP system.">
     <meta name="author" content="Heiswayi Nrird">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" media="screen">
     <link rel="stylesheet" type="text/css" href="assets/css/custom.css" media="screen">
 
-    <script type="text/javascript" src="assets/js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="assets/js/kbpgp-1.0.0-min.js"></script>
+    <script type="text/javascript" src="assets/js/kbpgp.js"></script>
     <script type="text/javascript" src="assets/js/FileSaver.js"></script>
     <script type="text/javascript" src="assets/js/pgpkeygen.js"></script>
+
     <!--[if IE 9]>
-		<script type="text/javascript" src="assets/js/placeholder.js"></script>
-	<![endif]-->
+        <script type="text/javascript" src="index_files/js/placeholder.js"></script>
+    <![endif]-->
 
-    <!-- Main script -->
-    <script type="text/javascript">
-        $(document).ready(function() {
-
-            /* Dynamic key size menus */
-            $('#algorithm').change(function() {
-                populateKeysizeDropdown();
-                $('#bitlength').removeAttr('disabled');
-            });
-
-            /* Set event handlers */
-            $('form#keygen').submit(function(e) {
-                e.preventDefault();
-                genKeyPair();
-            });
-
-            $('#download_priv_key').on('click', downloadPrivKey);
-            $('#download_pub_key').on('click', downloadPubKey);
-
-            $('#name, #email, #comments, #algorithm, #bitlength, #expire, #passphrase').tooltip({
-                trigger: 'hover',
-                placement: 'top'
-            });
-
-            $('[data-toggle="popover"]').popover({placement: 'top'});
-        });
-    </script>
-
-    <!-- Google Analytics -->
-    <script>
-        (function(i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function() {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-58296043-4', 'auto');
-        ga('send', 'pageview');
-    </script>
+    <script type="text/javascript" src="assets/js/script.js"></script>
 </head>
 
 <body>
-
+    <div id="filename_temp" style="display:none;" title="This is temp div for saving here a file name if file was been loaded by input.">pgp-message</div>
+    <!--status notification-->
+    <div class="hidden">
+        <div class="alert alert-success fade in" id="vrSuccess">
+            <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button><span id="vrAddrLabel"></span>
+        </div>
+        <div class="alert alert-danger fade in" id="vrError">
+            <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button><span id="vrAddrLabel"></span>
+        </div>
+        <div class="alert alert-warning fade in" id="vrWarning">
+            <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button><span id="vrAddrLabel"></span>
+        </div>
+    </div>
     <div class="container">
         <div class="row content">
             <div class="col-md-12">
 
                 <div class="page-header">
-                    <h1 class="title">PGP Key Generator</h1>
-                    Safer and easy-to-use client-side PGP key generator
+                    <h1 class="title">PGP Suite</h1>
+                    A simple and easy-to-use client-side PGP tool.
                 </div>
-
                 <div class="tabbable">
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#generator" aria-controls="generator" role="tab" data-toggle="tab">Generate a PGP key pair</a></li>
+                        <li role="presentation" class="active"><a href="#generator" aria-controls="generator" role="tab" data-toggle="tab">Generate PGP Keys</a></li>
+                        <li role="presentation"><a href="#sign" aria-controls="sign" role="tab" data-toggle="tab">Sign</a></li>
+                        <li role="presentation"><a href="#verify" aria-controls="verify" role="tab" data-toggle="tab">Verify</a></li>
+                        <li role="presentation"><a href="#signencrypt" aria-controls="sign" role="tab" data-toggle="tab">Encrypt (+Sign)</a></li>
+                        <li role="presentation"><a href="#decrypt" aria-controls="decrypt" role="tab" data-toggle="tab">Decrypt (+Verify)</a></li>
                         <li role="presentation"><a href="#faq" aria-controls="faq" role="tab" data-toggle="tab">FAQ</a></li>
                         <li role="presentation"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">About</a></li>
                     </ul>
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-
+                        <!-- Key gen -->
                         <div role="tabpanel" class="tab-pane active" id="generator">
 
                             <div class="row generator">
@@ -111,7 +85,7 @@
                                                     <label class="sr-only" for="name">Your Name</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
-                                                        <input class="form-control" name="name" placeholder="Your Name" type="text" id="name" title="Enter your name" required>
+                                                        <input class="form-control" name="name" placeholder="Your Name" id="name" title="" required="" data-original-title="Enter your name" data-cip-id="name" type="text">
                                                         <div class="input-group-addon">Required</div>
                                                     </div>
                                                 </div>
@@ -120,17 +94,17 @@
                                                     <label class="sr-only" for="email">Email</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></div>
-                                                        <input class="form-control" name="email" placeholder="you@domain.com" type="email" id="email" title="Enter a valid email address" required>
+                                                        <input class="form-control" name="email" placeholder="you@domain.com" id="email" title="" required="" data-original-title="Enter a valid email address" data-cip-id="email" type="email">
                                                         <div class="input-group-addon">Required</div>
                                                     </div>
-                                                    <span id="helpBlock" class="help-block"><a href="#" data-toggle="popover" title="Email address" data-content="Your email address will be included as public information in your public PGP key, so your public key can be easily imported by third-party PGP software. If you do not supply your email address, your PGP decryption software may be unable to link your email address to your public PGP key, and therefore unable to automatically encrypt/decrypt email messages. As a result, you will have to manually decrypt messages each time you receive a PGP-encrypted message.">Email address: Why it is required?</a></span>
+                                                    <span id="helpBlock" class="help-block"><a href="#" data-toggle="popover" title="" data-content="Your email address will be included as public information in your public PGP key, so your public key can be easily imported by third-party PGP software. If you do not supply your email address, your PGP decryption software may be unable to link your email address to your public PGP key, and therefore unable to automatically encrypt/decrypt email messages. As a result, you will have to manually decrypt messages each time you receive a PGP-encrypted message." data-original-title="Email address">Email address: Why it is required?</a></span>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="sr-only" for="comments">Optional Comment</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></div>
-                                                        <input class="form-control" name="comments" placeholder="Optional comments" type="text" id="comments" title="Enter any optional comment">
+                                                        <input class="form-control" name="comments" placeholder="Optional comments" id="comments" title="" data-original-title="Enter any optional comment" data-cip-id="comments" type="text">
                                                     </div>
                                                 </div>
 
@@ -138,8 +112,8 @@
                                                     <label class="sr-only" for="algorithm">Algorithm</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></div>
-                                                        <select class="form-control" name="algorithm" id="algorithm" title="Choose an encryption algorithm" required>
-                                                            <option value="" disabled="disabled" selected="selected" class="disabled">Algorithm</option>
+                                                        <select class="form-control" name="algorithm" id="algorithm" title="" required="" data-original-title="Choose an encryption algorithm" data-cip-id="cIPJQ342845639">
+                                                            <option value="" disabled="disabled" selected="selected" class="disabled">Select algorithm...</option>
                                                             <option value="rsa">RSA (Recommended)</option>
                                                             <option value="ecc">ECC (Elliptic Curve Cryptography)</option>
                                                         </select>
@@ -151,8 +125,8 @@
                                                     <label class="sr-only" for="bitlength">Bit Length</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-signal" aria-hidden="true"></span></div>
-                                                        <select class="form-control" name="bitlength" id="bitlength" title="Select a key size" required disabled>
-                                                            <option value="" class="disabled" selected="selected">Key size</option>
+                                                        <select class="form-control" name="bitlength" id="bitlength" title="" required="" disabled="disabled" data-original-title="Select a key size" data-cip-id="cIPJQ342845640">
+                                                            <option value="" class="disabled" selected="selected">Select key size...</option>
                                                         </select>
                                                         <div class="input-group-addon">Required</div>
                                                     </div>
@@ -162,8 +136,8 @@
                                                     <label class="sr-only" for="expire">Expires</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-hourglass" aria-hidden="true"></span></div>
-                                                        <select name="expire" id="expire" class="form-control" title="Expiration of your subkeys" required>
-                                                            <option value="" disabled="disabled" selected="selected" class="disabled">Expires</option>
+                                                        <select name="expire" id="expire" class="form-control" title="" required="" data-original-title="Expiration of your subkeys" data-cip-id="cIPJQ342845641">
+                                                            <option value="" disabled="disabled" selected="selected" class="disabled">Select expiry duration...</option>
                                                             <option value="0">Never</option>
                                                             <option value="1">1 year</option>
                                                             <option value="2">2 years</option>
@@ -178,14 +152,14 @@
                                                     <label class="sr-only" for="passphrase">Passphrase</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
-                                                        <input class="form-control" name="passphrase" placeholder="Passphrase" type="password" id="passphrase" pattern=".{5,}" title="Enter a passphrase; at least 5 characters" required>
+                                                        <input class="form-control" name="passphrase" placeholder="Passphrase" id="passphrase" pattern=".{5,}" title="" required="" data-original-title="Enter a passphrase; at least 5 characters" data-cip-id="passphrase" type="password">
                                                         <div class="input-group-addon">Required</div>
                                                     </div>
-                                                    <span id="helpBlock" class="help-block"><a href="#" data-toggle="popover" title="Passphrase" data-content="Passphrase is a like a password to protect your private PGP key. This password offers an extra layer of protection in case someone manage to steal your private PGP key. Please pick a password you will remember, because if you forget this password, there is no way to recover your password and no way for you to decrypt PGP-encrypted messages sent to you!">Passphrase: What is this?</a></span>
+                                                    <span id="helpBlock" class="help-block"><a href="#" data-toggle="popover" title="" data-content="Passphrase is a like a password to protect your private PGP key. This password offers an extra layer of protection in case someone manage to steal your public PGP key. Please pick a password you will remember, because if you forget this password, there is no way to recover your password and no way for you to decrypt PGP messages sent to you!" data-original-title="Passphrase">Passphrase: What is this?</a></span>
                                                 </div>
 
-                                                <input type="submit" value="Generate keys" id="generate_keys_btn" class="btn btn-primary btn-lg btn-block send" name="send" />
-                                                <a href="index.html" id="start_again_btn" class="btn btn-link btn-block hide">Click here to regenerate another pair of key</a>
+                                                <input value="Generate keys" id="generate_keys_btn" class="btn btn-primary btn-lg btn-block send" name="send" type="submit">
+                                                <a href="/" id="start_again_btn" class="btn btn-link btn-block hide">Click here to regenerate another pair of key</a>
                                             </form>
                                         </div>
                                     </div>
@@ -193,16 +167,16 @@
                                 </div>
                                 <div class="col-md-7">
 
-                                    <input type="hidden" name="key_short_id" id="key_short_id" value="" />
-                                    <input type="hidden" name="btn_update_ts" id="btn_update_ts" value=0 />
+                                    <input name="key_short_id" id="key_short_id" value="" type="hidden">
+                                    <input name="btn_update_ts" id="btn_update_ts" value="0" type="hidden">
 
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Public Key</h3>
                                         </div>
                                         <div class="panel-body">
-                                            <textarea class="form-control message" rows="7" name="pubkey" placeholder="Your public key will be generated here." id="pubkey" readonly></textarea>
-                                            <span id="helpBlock" class="help-block"><a href="#" class="btn btn-danger download disabled" title="This button will be enabled after you generate your key pair." name="download_pub_key" id="download_pub_key"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download public key (.ASC file)</a> <a href="#" class="btn btn-link" data-toggle="popover" title="Public key" data-content="You can put this key on your website or at the bottom signature of your email messages. Anyone wishing to contact you in private will have your public PGP key to send you encrypted messages.">Learn More</a>
+                                            <textarea class="form-control message" rows="7" name="pubkey" placeholder="Your public key will be generated here." id="pubkey" readonly="readonly"></textarea>
+                                            <span id="helpBlock" class="help-block"><a href="#download_pub_key" class="btn btn-danger download disabled" title="This button will be enabled after you generate your key pair." name="download_pub_key" id="download_pub_key"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download public key (.ASC file)</a> <a href="#" class="btn btn-link" data-toggle="popover" title="" data-content="You can put this key on your website or at the bottom signature of your email messages. Anyone wishing to contact you in private will have your public PGP key to send you encrypted messages. This file contain the key in text format and can be opened as text." data-original-title="Public key">Learn More</a>
                                             </span>
                                         </div>
                                     </div>
@@ -212,8 +186,8 @@
                                             <h3 class="panel-title">Private Key</h3>
                                         </div>
                                         <div class="panel-body">
-                                            <textarea class="form-control message" rows="7" name="privkey" placeholder="Your private key will be generated here." id="privkey" readonly></textarea>
-                                            <span id="helpBlock" class="help-block"><a href="#" class="btn btn-danger download disabled" title="This button will be enabled after you generate your key pair." name="download_priv_key" id="download_priv_key"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download private key (.ASC file)</a> <a href="#" class="btn btn-link" data-toggle="popover" title="Private key" data-content="Save your private PGP key in a file on your computer and keep it as confidential as possible. You will need it to decrypt PGP-encrypted messages sent to you using your public PGP key.">Learn More</a>
+                                            <textarea class="form-control message" rows="7" name="privkey" placeholder="Your private key will be generated here." id="privkey" readonly="readonly"></textarea>
+                                            <span id="helpBlock" class="help-block"><a href="#download_priv_key" class="btn btn-danger download disabled" title="This button will be enabled after you generate your key pair." name="download_priv_key" id="download_priv_key"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download private key (.ASC file)</a> <a href="#" class="btn btn-link" data-toggle="popover" title="" data-content="Save your private PGP key in a file on your computer and keep it as confidential as possible. You will need it to decrypt PGP messages sent to you using your public PGP key. This file contain the key in text format and can be opened as text." data-original-title="Private key">Learn More</a>
                                             </span>
                                         </div>
                                     </div>
@@ -223,87 +197,358 @@
 
                         </div>
 
+                        <!-- Sign message -->
+                        <div role="tabpanel" class="tab-pane" id="sign">
+                            <div class="row generator">
+                                <div class="col-md-5">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Your Private Key</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" id="sign-private-key" rows="7" placeholder="Paste your private key here (ECC or RSA key)." title="ECC and RSA algorithms working both for sign and verify. You can use ECC keys here."></textarea>
+                                            <input type='file' onchange='openFile(event, "sign-private-key")'>
+                                            <br>
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
+                                                <input class="form-control" name="sign-passphrase" placeholder="Passphrase for private key" id="sign-passphrase" pattern=".{5,}" title="Enter your private key passphrase" type="password">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Your Message in Plain Text</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" rows="7" id="sign-plain-text" placeholder="Write your message here."></textarea>
+                                            <input id="sign_src" type='file' onchange='openFile(event, "sign-plain-text")'><br>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary" id="sign-button">Sign the message</button>
+                                    <br>
+                                    <br>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Signed Message</h3>
+                                        </div>
+                                        <div id="vrAlert_signed"></div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" rows="7" id="signed-text" placeholder="Here you'll see the signed message." readonly="readonly"></textarea>
+                                            <br>
+                                            <a id="download-signed-text" style="display:none;" href="javascript:void(0);" title="Download signed text.">
+                                                <button class="btn btn-secondary">Download signed message</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Verify signed message -->
+                        <div role="tabpanel" class="tab-pane" id="verify">
+                            <div class="row generator">
+                                <div class="col-md-5">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Signer's Public Key</h3>
+                                        </div>
+                                        <div class="panel-body" title="Signed using private key and verified using public key.">
+                                            <textarea class="form-control message" id="Signer-public-key" rows="7" placeholder="Paste signer&#39;s public key here."></textarea>
+                                            <input type='file' onchange='openFile(event, "Signer-public-key")'><br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">PGP-signed Message</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" rows="7" id="Unverified-plain-text" placeholder="Paste PGP-signed message here."></textarea>
+                                            <input type='file' onchange='openFile(event, "Unverified-plain-text")'><br>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary" id="verify-signature">Verify signature</button>
+                                    <br>
+                                    <br>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Raw Message and Status</h3>
+                                        </div>
+                                        <div id="vrAlert"></div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" rows="7" id="pure-text" placeholder="Here you'll see the raw message if it's signed and verified." readonly=""></textarea>
+                                            <br>
+                                            <a id="download_verified_as_binary" style="display:none; float: right" href="javascript:void(0);">
+                                                Download as binary
+                                            </a>
+                                            <a id="download-pure-text" style="display:none;" href="javascript:void(0);">
+                                                <button class="btn btn-secondary">Download message</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Encrypt+Sign message -->
+                        <div role="tabpanel" class="tab-pane" id="signencrypt">
+                            <div class="row generator">
+                                <div class="col-md-5">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Reсeiver's Public Key</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" id="signencrypt-receivers-public-key" rows="7" placeholder="Paste the public key here. (RSA only)" title="ECC encryption is not currently supported for now."></textarea>
+                                            <input type='file' onchange='openFile(event, "signencrypt-receivers-public-key")'><br>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Signer's Private Key (For signing purpose)</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" id="signencrypt-private-key" rows="7" placeholder="Paste the private key here. RSA or ECC is supported." title="If the private key is not provided, the encryption will be performed without signing."></textarea>
+                                            <input type='file' onchange='openFile(event, "signencrypt-private-key")'><br>
+                                            <br>
+
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
+                                                <input class="form-control" name="sign-passphrase" placeholder="Passphrase for private key" id="signencrypt-passphrase" pattern=".{5,}" title="Enter your private key passphrase" type="password">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Your Message in Plain Text</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" rows="7" id="signencrypt-plain-text" placeholder="Write your message here."></textarea>
+                                            <input type='file' onchange='openFile(event, "signencrypt-plain-text")'><br>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary" id="signencrypt-button" title="If the private key is not provided, the encryption will be performed just by the public key.">Encrypt the message</button>
+                                    <br>
+                                    <br>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Encrypted PGP Message</h3>
+                                        </div>
+                                        <div id="vrAlert3"></div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" style="display: none;" rows="7" id="encrypted-text" placeholder="this is hidden textarea to copy from here an encrypted text" readonly="readonly"></textarea>
+                                            <textarea class="form-control message" rows="7" id="signencrypt-text" placeholder="Here you'll see the encrypted and signed message." readonly="readonly"></textarea>
+                                            <br>
+                                            <a id="download-signencrypt-text" style="display:none;" href="javascript:void(0);">
+                                                <button class="btn btn-secondary">Download encrypted message</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Decrypt message (and verify signature, if signed)-->
+                        <div role="tabpanel" class="tab-pane" id="decrypt">
+                            <div class="row generator">
+                                <div class="col-md-5">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Receiver's Private Key (For decryption purpose)</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" id="decryption-private-key" rows="7" placeholder="Paste the private key here to decrypt. RSA key only."></textarea>
+                                            <input type='file' onchange='openFile(event, "decryption-private-key")'><br>
+                                            <br>
+
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
+                                                <input class="form-control" name="decryption-passphrase" placeholder="Passphrase for private key" id="decryption-passphrase" pattern=".{5,}" title="Enter your private key passphrase" type="password">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Signer's Public Key</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" id="signer_public_key" rows="7" placeholder="Paste the signer's public key here if the message is signed. ECC key is supported. (Leave this field if the message is not signed.)"></textarea>
+                                            <input type='file' onchange='openFile(event, "signer_public_key")'><br>
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Encrypted PGP Message</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <textarea class="form-control message" rows="7" id="decryption-encrypted-text" placeholder="Enter the encrypted message here."></textarea>
+                                            <input type='file' onchange='openFile(event, "decryption-encrypted-text")'><br>
+                                        </div>
+                                    </div>
+
+                                    <!--Here you can see the multistring commentary-->
+                                    <button class="btn btn-primary" id="decryption-button">Decrypt the message</button>
+
+                                    <br>
+                                    <br>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Decrypted Message in Plain Text</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div id="vrAlert2"></div>
+                                            <textarea class="form-control message" rows="7" id="decryption-decrypted-text" placeholder="Here you'll see the decrypted message." readonly="readonly"></textarea>
+                                            <br>
+                                            <a id="download_decrypt_verify_as_binary" style="display:none; float: right" href="javascript:void(0);">
+                                                Download as binary
+                                            </a> <a id="download-decrypted-text" style="display:none;" href="javascript:void(0);">
+                                                <button class="btn btn-secondary">Download decrypted text</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ -->
                         <div role="tabpanel" class="tab-pane" id="faq">
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingOne">
                                         <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Is it safe for me to generate my PGP keys through your website?
-        </a>
-      </h4>
+                                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                Is it safe for me to generate my PGP keys through your website?
+                                            </a>
+                                        </h4>
                                     </div>
                                     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="panel-body">
-                                            Yes, it is as safe as generating your keys using a local application. The key generation on this website is done using client-side only. This means the key pairs are generated entirely in your web browser and they never leave your computer. This website never sees any key-related data or the key itself.
+                                            Yes, it is as safe as
+                                            generating your keys using a local application. The key generation on
+                                            this website is done client-side only. This means the key pairs are
+                                            generated entirely in your web browser and they never leave your
+                                            computer. This website never sees any key related data or the key
+                                            itself.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingTwo">
                                         <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          Can you tell me more about the keys that the program generates?
-        </a>
-      </h4>
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                                Can you tell me more about the keys that the program generates?
+                                            </a>
+                                        </h4>
                                     </div>
                                     <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
                                         <div class="panel-body">
-                                            Sure. For starters, it enforces using a passphrase with each key generated. This ensures some level of protection if your private key is ever stolen. It also automatically generates two subkeys for you, one for signing and the other for encryption. You can use your subkeys to sign and encrypt data and keep your private key safe. The bit length of generated subkeys will be identical to the length you specified for the primary key. The primary key it generates for you never expires. You can, however, set the expiration date on the generated subkeys using the 'Expire' option in the key generation form.
+                                            Sure. For starters, it
+                                            enforces using a passphrase with each key generated. This ensures some
+                                            level of protection if your key is ever stolen. It also automatically
+                                            generates two subkeys for you, one for signing and the other for
+                                            encryption. You can use your subkeys to sign and encrypt data and keep
+                                            your private key safe. The bit length of generated subkeys will be
+                                            identical to the length you specified for the primary key. The primary
+                                            key it generates for you never expires. You can, however, set the
+                                            expiration date on the generated subkeys using the 'Expire' option in
+                                            the key generation form.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingThree">
                                         <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-          What is Elliptic Curve Cryptography?
-        </a>
-      </h4>
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                                What is Elliptic Curve Cryptography?
+                                            </a>
+                                        </h4>
                                     </div>
                                     <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
                                         <div class="panel-body">
-                                            Elliptic Curve Cryptography (ECC) is an approach to public-key cryptography based on the algebraic structure of elliptic curves over finite fields. One of the main benefits in comparison with non-ECC cryptography (with plain Galois fields as a basis) is the same level of security provided by keys of smaller size. For example, a 256-bit ECC public key should provide comparable security to a 3072-bit RSA public key. ECC is still not widely supported in many PGP client applications so I advise that you generate ECC keys only if you know what you're doing. You can read more about it at <a href="http://tools.ietf.org/html/rfc6637">RFC 6637</a>.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" role="tab" id="headingFour">
-                                        <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-          I'm concerned about my privacy. Do you keep or gather logs of any sort?
-        </a>
-      </h4>
-                                    </div>
-                                    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
-                                        <div class="panel-body">
-                                            No, I don't keep or log any information you submitted through the generator form. The only logging that occurs when you visit this website is performed by Google Analytics, which helps me keep track of the number of people visiting the site monthly. Plus, this website is hosted entirely using <a href="https://pages.github.com/">GitHub Pages</a> and the source code for this website is available in a <a href="https://github.com/heiswayi/pgp">GitHub repository here</a>.
+                                            Elliptic Curve Cryptography
+                                            (ECC) is an approach to public-key cryptography based on the algebraic
+                                            structure of elliptic curves over finite fields. One of the main
+                                            benefits in comparison with non-ECC cryptography (with plain Galois
+                                            fields as a basis) is the same level of security provided by keys of
+                                            smaller size. For example, a 256-bit ECC public key should provide
+                                            comparable security to a 3072-bit RSA public key. ECC is still not
+                                            widely supported in many PGP client applications so I advise that you
+                                            generate ECC keys only if you know what you're doing. You can read more
+                                            about it at <a href="http://tools.ietf.org/html/rfc6637">RFC 6637</a>.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingFive">
                                         <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-          Why does my web browser or computer slow down when I'm generating keys?
-        </a>
-      </h4>
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                                Why does my web browser or computer slow down when I'm generating keys?
+                                            </a>
+                                        </h4>
                                     </div>
                                     <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive">
                                         <div class="panel-body">
-                                            PGP key generation is a resource intensive process. As a result, your may experience increased CPU and memory usage on your device, which can result in performance issues. The performance impact depends on the hardware capabilities of your device.
+                                            PGP key generation is a
+                                            resource intensive process. As a result, your may experience increased
+                                            CPU and memory usage on your device, which can result in performance
+                                            issues. The performance impact depends on the hardware capabilities of
+                                            your device.
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- About -->
                         <div role="tabpanel" class="tab-pane" id="about">
-                           <blockquote>Pretty Good Privacy (PGP) is a data encryption and decryption computer program that provides cryptographic privacy and authentication for data communication. PGP is often used for signing, encrypting, and decrypting texts, e-mails, files, directories, and whole disk partitions and to increase the security of e-mail communications. It was created by Phil Zimmermann in 1991. PGP and similar software follow the OpenPGP standard (RFC 4880) for encrypting and decrypting data. <em>Source: <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">Wikipedia</a></em></blockquote>
+                            <blockquote>Pretty Good Privacy (PGP) is a data encryption and decryption computer program
+                                that provides cryptographic privacy and authentication for data communication.
+                                PGP is often used for signing, encrypting, and decrypting texts, e-mails, files,
+                                directories, and whole disk partitions and to increase the security of e-mail
+                                communications. It was created by Phil Zimmermann in 1991. PGP and similar
+                                software follow the OpenPGP standard (RFC 4880) for encrypting and decrypting
+                                data. <em>Source: <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">
+                                        Wikipedia</a></em>
+                            </blockquote>
 
-                            <p>This site only provides a simple, safer and easy-to-use tool for people who want to generate a pair of PGP keys or more. Today, some common methods for generating keys still involve going to a command prompt of a Linux/Unix machine and using the GPG utility, or installing a PGP compatible application on your desktop, so I wanted to provide an easier way to generate keys. None of this would be possible without the awesome open source software that I'm using which is <a href="https://keybase.io/">KeyBase's</a> awesome JavaScript implementation of PGP (<a href="https://github.com/keybase/kbpgp">kbpgp</a>). While for file saving capabilities, I am using <a href="https://github.com/eligrey">Eli Grey's</a> wonderful <a href="https://github.com/eligrey/FileSaver.js/">FileSaver.js</a> interface.</p>
+                            <p>
+                                This site only provides a simple and easy-to-use tool for people to generate PGP keys
+                                with. Today, the common methods for generating keys still involve going to a command
+                                prompt of a Linux/Unix machine and using the GPG utility, or installing a PGP compatible
+                                application on your desktop. I wanted to provide an easier way to generate keys. None of
+                                this would be possible without the awesome Open Source software I'm utilizing. I'm
+                                using <a href="https://keybase.io/">KeyBase's</a> awesome JavaScript implementation of
+                                PGP (<a href="https://github.com/keybase/kbpgp">kbpgp</a>). For file saving capabilities
+                                I am utilizing <a href="https://github.com/eligrey">Eli Grey's</a> wonderful
+                                <a href="https://github.com/eligrey/FileSaver.js/">FileSaver.js</a> interface.
+                            </p>
 
-                            <p>This site is open source and the source code are available on <a href="https://github.com/heiswayi/pgp">GitHub</a> under <a href="http://heiswayi.github.io/mit-license">MIT License</a>. If you have any inquiry or problem, you may <a href="https://github.com/heiswayi/pgp/issues">create an issue here</a>.</p>
+                            <p>
+                                This site is Open Source and the source code is available on <a href="https://github.com/heiswayi/pgp">GitHub</a> under MIT license. This project has been updated with the forked versions from <a href="https://github.com/ramuta/pgp">Ramuta</a> and <a href="https://github.com/TheChiefMeat/pgp">TheChiefMeat</a>.
+                            </p>
                         </div>
+
                     </div>
 
                 </div>
@@ -312,16 +557,18 @@
         </div>
     </div>
 
-    <script>
-    $('body').on('click', function (e) {
-      //did not click a popover toggle or popover
-      if ($(e.target).data('toggle') !== 'popover'
-        && $(e.target).parents('.popover.in').length === 0) {
-        $('[data-toggle="popover"]').popover('hide');
-      }
-    });
-    </script>
 
+
+    <div class="kphc cip-genpw-icon cip-icon-key-big" style="z-index: 3; top: 579.2px; left: 672.317px;"></div>
+    <div id="kphc-pw-dialog" class="kphc">
+        <div style="display: none;" tabindex="-1" role="dialog" class="ui-dialog ui-corner-all ui-widget ui-widget-content ui-front ui-draggable" aria-describedby="cip-genpw-dialog" aria-labelledby="ui-id-1">
+            <div class="ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle"><span id="ui-id-1" class="ui-dialog-title">Password Generator</span><button type="button" class="ui-button ui-corner-all ui-widget ui-button-icon-only ui-dialog-titlebar-close" title="×"><span class="ui-button-icon ui-icon ui-icon-closethick"></span><span class="ui-button-icon-space"> </span>×</button></div>
+            <div id="cip-genpw-dialog" class="ui-dialog-content ui-widget-content">
+                <div class="cip-genpw-clearfix"><button id="cip-genpw-btn-generate" class="b2c-btn b2c-btn-primary b2c-btn-small" style="float: left;">Generate</button><button id="cip-genpw-btn-clipboard" class="b2c-btn b2c-btn-small" style="float: right;">Copy to clipboard</button></div>
+                <div class="b2c-input-append cip-genpw-password-frame"><input id="cip-genpw-textfield-password" class="cip-genpw-textfield" type="text"><span class="b2c-add-on" id="cip-genpw-quality">123 Bits</span></div><label class="cip-genpw-label"><input id="cip-genpw-checkbox-next-field" class="cip-genpw-checkbox" type="checkbox"> also fill in the next password-field</label><button id="cip-genpw-btn-fillin" class="b2c-btn b2c-btn-small">Fill in &amp; copy to clipboard</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
