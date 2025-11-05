@@ -12,46 +12,21 @@ var _debug = function(msg) {
 /**
  * Generate a key pair and place base64 encoded values into specified DOM elements.
  */
-var genKeyPair = function() {
+var genKeyPair = async function() {
 
     // Get params from user input
     var name = $('#name').val();
-    var email = $('#email').val() ? " <" + $('#email').val() + ">" : "";;
-    var comments = ($('#comments').val() != "") ? " (" + $('#comments').val() + ")" : "";
+    var email = $('#email').val();
+    var comments = $('#comments').val();
     var bitlength = parseInt($('#bitlength').val());
     var algorithm = $('#algorithm').val();
     var expire = $('#expire').val();
     var passphrase = $('#passphrase').val();
 
-    if (expire == "1") {
-        var expire = 86400 * 365 * 1;
-    } else if (expire == "2") {
-        var expire = 86400 * 365 * 2;
-    } else if (expire == "4") {
-        var expire = 86400 * 365 * 4;
-    } else if (expire == "8") {
-        var expire = 86400 * 365 * 8;
+    var userIDs = [{ name: name, email: email }];
+    if (comments) {
+        userIDs[0].comment = comments;
     }
-
-    // Set ECC flag
-    var use_ecc = false;
-    if (algorithm == 'ecc') {
-        use_ecc = true;
-    }
-
-    // Calculate subkey size
-    var subkey_bitlength = calcSubkeySize(algorithm, bitlength);
-
-    _debug("Params:");
-    _debug("Name: " + name);
-    _debug("Email: " + email);
-    _debug("Comments: " + comments);
-    _debug("Bitlength: " + bitlength);
-    _debug("Subkey Bitlength: " + subkey_bitlength);
-    _debug("Algorithm: " + algorithm);
-    _debug("Expire: " + expire);
-    _debug("use_ecc flag: " + use_ecc);
-    _debug("Passphrase: " + passphrase);
 
     // Disable/update the action button
     _debug("Update buttons");
@@ -59,91 +34,34 @@ var genKeyPair = function() {
     $('#generate_keys_btn').addClass("disabled");
     $('#generate_keys_btn').val("Generating .");
 
-    // Create a progress hook
-    var my_asp = new kbpgp.ASP({
-        progress_hook: function(o) {
-
-            _debug("progress_hook received: " + o);
-            var btn_update_ts = $('#btn_update_ts');
-
-            // If last button update was less than 500ms ago we skip
-            if ((Date.now() - btn_update_ts.val()) < 500) {
-                return;
-            }
-
-            // Else we continue to update button text
-            var btn = $('#generate_keys_btn');
-
-            if (btn.val() == 'Generating .') {
-                btn.val('Generating ..');
-            } else if (btn.val() == 'Generating ..') {
-                btn.val('Generating ...');
-            } else {
-                btn.val('Generating .');
-            }
-
-            // And we update the timestamp
-            btn_update_ts.val(Date.now());
-        }
-    });
-
-    var F = kbpgp["const"].openpgp;
-
-    var opts = {
-        asp: my_asp, // set progress hook
-        userid: name + comments + email,
-        ecc: use_ecc,
-        primary: {
-            nbits: bitlength,
-            flags: F.certify_keys | F.sign_data | F.auth | F.encrypt_comm | F.encrypt_storage,
-            expire_in: expire // never expires
-        },
-        subkeys: [{
-            nbits: subkey_bitlength,
-            flags: F.sign_data,
-            expire_in: expire
-        }, {
-            nbits: subkey_bitlength,
-            flags: F.encrypt_comm | F.encrypt_storage,
-            expire_in: expire
-        }, ]
+    var options = {
+        userIDs: userIDs,
+        passphrase: passphrase
     };
 
-    _debug("Calling KeyManager.generate()");
-    kbpgp.KeyManager.generate(opts, function(err, alice) {
-        if (!err) {
-            _debug("Callback invoked()");
-            var _passphrase = $('#passphrase').val();
-            // sign alice's subkeys
-            alice.sign({}, function(err) {
-                _debug(alice);
-                $('#key_short_id').val(alice.get_pgp_short_key_id());
-                _debug("KeyID: " + alice.get_pgp_short_key_id());
-                // export; dump the private with a passphrase
-                alice.export_pgp_private_to_client({
-                    passphrase: _passphrase
-                }, function(err, pgp_private) {
-                    _debug("private key: " + pgp_private);
-                    $('#privkey').val(pgp_private);
-                    // Enable download buttons
-                    $('#download_priv_key').removeClass('disabled');
-                });
-                alice.export_pgp_public({}, function(err, pgp_public) {
-                    _debug("public key: " + pgp_public);
-                    $('#pubkey').val(pgp_public);
-                    // Enable download buttons
-                    $('#download_pub_key').removeClass('disabled');
-                });
-            });
-        }
+    if (algorithm === 'ecc') {
+        options.curve = 'curve25519';
+    } else {
+        options.rsaBits = bitlength;
+    }
 
-        // Enable button once again (NOTE: user should refresh to re-gen)
-        $('#generate_keys_btn').removeClass("disabled");
-        $('#generate_keys_btn').removeClass("btn-primary").addClass("btn-success");
-        $('#generate_keys_btn').val("Finished");
-        $('#start_again_btn').removeClass("hide").fadeIn();
-    });
+    const { privateKey, publicKey, revocationCertificate } = await openpgp.generateKey(options);
 
+    $('#privkey').val(privateKey);
+    $('#pubkey').val(publicKey);
+
+    const key = await openpgp.readKey({ armoredKey: publicKey });
+    $('#key_short_id').val(key.getKeyID().toHex().slice(-8).toUpperCase());
+
+    // Enable download buttons
+    $('#download_priv_key').removeClass('disabled');
+    $('#download_pub_key').removeClass('disabled');
+
+    // Enable button once again (NOTE: user should refresh to re-gen)
+    $('#generate_keys_btn').removeClass("disabled");
+    $('#generate_keys_btn').removeClass("btn-primary").addClass("btn-success");
+    $('#generate_keys_btn').val("Finished");
+    $('#start_again_btn').removeClass("hide").fadeIn();
 }
 
 /**
