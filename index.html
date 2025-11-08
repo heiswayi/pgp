@@ -260,82 +260,125 @@
                                     <div class="panel-heading" role="tab" id="headingOne">
                                         <h4 class="panel-title">
                                             <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                Is it safe for me to generate my PGP keys through your website?
+                                                Is it safe to generate PGP keys through this website?
                                             </a>
                                         </h4>
                                     </div>
                                     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="panel-body">
-                                            Yes, it is as safe as
-                                            generating your keys using a local application. The key generation on
-                                            this website is done client-side only. This means the key pairs are
-                                            generated entirely in your web browser and they never leave your
-                                            computer. This website never sees any key related data or the key
-                                            itself.
+                                            Yes. All key generation happens entirely in your web browser using client-side JavaScript. Your keys are
+                                            generated locally on your device and never transmitted to any server. The private key never leaves your
+                                            computer, and this website has no way to access or store your key material. For maximum security, you can
+                                            disconnect from the internet before generating keys, or download this page and run it locally.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingTwo">
                                         <h4 class="panel-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                                Can you tell me more about the keys that the program generates?
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                What types of keys does this tool generate?
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                         <div class="panel-body">
-                                            Sure. For starters, it
-                                            enforces using a passphrase with each key generated. This ensures some
-                                            level of protection if your key is ever stolen. It also automatically
-                                            generates two subkeys for you, one for signing and the other for
-                                            encryption. You can use your subkeys to sign and encrypt data and keep
-                                            your private key safe. The bit length of generated subkeys will be
-                                            identical to the length you specified for the primary key. The primary
-                                            key it generates for you never expires. You can, however, set the
-                                            expiration date on the generated subkeys using the 'Expire' option in
-                                            the key generation form.
+                                            This tool generates OpenPGP-compliant key pairs with automatic subkey generation. Each key pair includes:
+                                            <ul>
+                                                <li><strong>Primary key:</strong> Used for certification (never expires by default)</li>
+                                                <li><strong>Encryption subkey:</strong> For encrypting and decrypting messages</li>
+                                                <li><strong>Signing subkey:</strong> For creating digital signatures</li>
+                                            </ul>
+                                            All keys require a passphrase for additional security. The subkeys inherit the bit length you specify
+                                            for the primary key, and you can set custom expiration dates for subkeys using the 'Expires' option.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingThree">
                                         <h4 class="panel-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                                                What is Elliptic Curve Cryptography?
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                What's the difference between RSA and ECC?
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+                                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                                         <div class="panel-body">
-                                            Elliptic Curve Cryptography
-                                            (ECC) is an approach to public-key cryptography based on the algebraic
-                                            structure of elliptic curves over finite fields. One of the main
-                                            benefits in comparison with non-ECC cryptography (with plain Galois
-                                            fields as a basis) is the same level of security provided by keys of
-                                            smaller size. For example, a 256-bit ECC public key should provide
-                                            comparable security to a 3072-bit RSA public key. ECC is still not
-                                            widely supported in many PGP client applications so I advise that you
-                                            generate ECC keys only if you know what you're doing. You can read more
-                                            about it at <a href="http://tools.ietf.org/html/rfc6637">RFC 6637</a>.
+                                            <strong>RSA (Recommended):</strong> The most widely-supported algorithm, compatible with virtually all
+                                            PGP software. Recommended key sizes are 2048 bits (minimum) or 4096 bits (recommended for long-term security).
+                                            <br><br>
+                                            <strong>ECC (Elliptic Curve Cryptography):</strong> A modern alternative that provides equivalent security
+                                            with smaller key sizes. For example, a 256-bit ECC key offers comparable security to a 3072-bit RSA key,
+                                            resulting in smaller keys and faster operations. However, ECC support varies across PGP applications, so
+                                            only use ECC if you're certain your recipients' software supports it. Learn more at
+                                            <a href="https://tools.ietf.org/html/rfc6637" target="_blank">RFC 6637</a>.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingFour">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                                How should I store my private key?
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                                        <div class="panel-body">
+                                            Your private key should be treated as highly sensitive information:
+                                            <ul>
+                                                <li>Store it in a secure location on your device (encrypted storage preferred)</li>
+                                                <li>Create a secure backup on a separate device or encrypted USB drive</li>
+                                                <li>Never share your private key with anyone</li>
+                                                <li>Never email or upload it to cloud storage unencrypted</li>
+                                                <li>Remember your passphrase - if lost, you cannot decrypt messages sent to you</li>
+                                            </ul>
+                                            If your private key is ever compromised, revoke it immediately and generate new keys.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingFive">
                                         <h4 class="panel-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-                                                Why does my web browser or computer slow down when I'm generating keys?
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                                Why does key generation slow down my browser?
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive">
+                                    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
                                         <div class="panel-body">
-                                            PGP key generation is a
-                                            resource intensive process. As a result, your may experience increased
-                                            CPU and memory usage on your device, which can result in performance
-                                            issues. The performance impact depends on the hardware capabilities of
-                                            your device.
+                                            PGP key generation requires intensive cryptographic computations to ensure security. The process involves
+                                            generating large prime numbers and performing complex mathematical operations, which can temporarily
+                                            increase CPU and memory usage. The time required depends on:
+                                            <ul>
+                                                <li>Your device's processing power</li>
+                                                <li>The chosen algorithm (RSA vs ECC)</li>
+                                                <li>The selected key size (larger keys take longer)</li>
+                                            </ul>
+                                            This is normal behavior and indicates that strong cryptographic keys are being generated. Typically,
+                                            the process completes within a few seconds to a minute.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingSix">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                                Can I use the keys generated here with other PGP software?
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                                        <div class="panel-body">
+                                            Yes. This tool generates standard OpenPGP-compliant keys that work with all PGP-compatible software, including:
+                                            <ul>
+                                                <li>GPG (GNU Privacy Guard) command-line tools</li>
+                                                <li>Email clients like Thunderbird with Enigmail</li>
+                                                <li>Gpg4win (Windows), GPG Suite (macOS)</li>
+                                                <li>ProtonMail and other encrypted email services</li>
+                                                <li>Password managers and other PGP-enabled applications</li>
+                                            </ul>
+                                            Simply import the downloaded .ASC key files into your preferred PGP application.
                                         </div>
                                     </div>
                                 </div>
@@ -344,30 +387,70 @@
 
                         <!-- About -->
                         <div role="tabpanel" class="tab-pane" id="about">
-                            <blockquote>Pretty Good Privacy (PGP) is a data encryption and decryption computer program
+                            <h3>What is PGP?</h3>
+                            <blockquote>
+                                Pretty Good Privacy (PGP) is a data encryption and decryption computer program
                                 that provides cryptographic privacy and authentication for data communication.
-                                PGP is often used for signing, encrypting, and decrypting texts, e-mails, files,
-                                directories, and whole disk partitions and to increase the security of e-mail
-                                communications. It was created by Phil Zimmermann in 1991. PGP and similar
-                                software follow the OpenPGP standard (RFC 4880) for encrypting and decrypting
-                                data. <em>Source: <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">
-                                        Wikipedia</a></em>
+                                PGP is often used for signing, encrypting, and decrypting texts, emails, files,
+                                directories, and whole disk partitions to increase the security of communications.
+                                It was created by Phil Zimmermann in 1991. PGP and similar software follow the
+                                OpenPGP standard (RFC 4880) for encrypting and decrypting data.
+                                <em>Source: <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">Wikipedia</a></em>
                             </blockquote>
 
+                            <h3>About This Tool</h3>
                             <p>
-                                This site only provides a simple and easy-to-use tool for people to generate PGP keys
-                                with. Today, the common methods for generating keys still involve going to a command
-                                prompt of a Linux/Unix machine and using the GPG utility, or installing a PGP compatible
-                                application on your desktop. I wanted to provide an easier way to generate keys. None of
-                                this would be possible without the awesome Open Source software I'm utilizing. I'm
-                                using <a href="https://keybase.io/">KeyBase's</a> awesome JavaScript implementation of
-                                PGP (<a href="https://github.com/keybase/kbpgp">kbpgp</a>). For file saving capabilities
-                                I am utilizing <a href="https://github.com/eligrey">Eli Grey's</a> wonderful
-                                <a href="https://github.com/eligrey/FileSaver.js/">FileSaver.js</a> interface.
+                                PGP Suite is a free, open-source web application that makes PGP encryption accessible to everyone.
+                                Traditional PGP tools often require command-line knowledge or complex desktop software installation.
+                                This tool provides a simple, user-friendly interface that runs entirely in your browser - no installation,
+                                no command-line expertise required.
                             </p>
 
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li><strong>100% Client-Side:</strong> All cryptographic operations happen in your browser. Your keys never touch our servers.</li>
+                                <li><strong>Modern Cryptography:</strong> Support for both RSA and Elliptic Curve Cryptography (ECC) algorithms</li>
+                                <li><strong>Complete PGP Operations:</strong> Generate keys, encrypt/decrypt messages, and sign/verify documents</li>
+                                <li><strong>Standards Compliant:</strong> Generates OpenPGP-compliant keys compatible with GPG and other PGP software</li>
+                                <li><strong>No Registration Required:</strong> Use the tool immediately without creating an account</li>
+                            </ul>
+
+                            <h4>Technology Stack</h4>
                             <p>
-                                This site is Open Source and the source code is available on <a href="https://github.com/heiswayi/pgp">GitHub</a> under MIT license. This project has been updated with the forked versions from <a href="https://github.com/ramuta/pgp">Ramuta</a> and <a href="https://github.com/TheChiefMeat/pgp">TheChiefMeat</a>.
+                                This application is built using modern open-source technologies:
+                            </p>
+                            <ul>
+                                <li><strong><a href="https://openpgpjs.org/" target="_blank">OpenPGP.js</a></strong> (v5.10.2) - A JavaScript implementation of the OpenPGP protocol for encryption and key management</li>
+                                <li><strong><a href="https://github.com/eligrey/FileSaver.js/" target="_blank">FileSaver.js</a></strong> - Client-side file saving by <a href="https://github.com/eligrey" target="_blank">Eli Grey</a></li>
+                                <li><strong><a href="https://getbootstrap.com/" target="_blank">Bootstrap</a></strong> - Responsive UI framework</li>
+                                <li><strong><a href="https://jquery.com/" target="_blank">jQuery</a></strong> - JavaScript library for DOM manipulation</li>
+                            </ul>
+
+                            <h4>Open Source</h4>
+                            <p>
+                                PGP Suite is open source software released under the <strong>MIT License</strong>. The source code is available on
+                                <a href="https://github.com/heiswayi/pgp" target="_blank">GitHub</a>. This project builds upon excellent work from the
+                                community, including contributions from <a href="https://github.com/ramuta/pgp" target="_blank">Ramuta</a> and
+                                <a href="https://github.com/TheChiefMeat/pgp" target="_blank">TheChiefMeat</a>.
+                            </p>
+                            <p>
+                                Contributions, bug reports, and feature requests are welcome. If you find this tool useful, please consider
+                                starring the repository on GitHub or contributing to its development.
+                            </p>
+
+                            <h4>Privacy & Security</h4>
+                            <p>
+                                Your privacy is paramount. This website:
+                            </p>
+                            <ul>
+                                <li>Does not collect, store, or transmit your keys or messages</li>
+                                <li>Does not use analytics or tracking scripts</li>
+                                <li>Does not require registration or personal information</li>
+                                <li>Runs entirely client-side in your browser</li>
+                            </ul>
+                            <p>
+                                For maximum security, you can save this page locally and use it offline, or audit the
+                                <a href="https://github.com/heiswayi/pgp" target="_blank">source code</a> yourself.
                             </p>
                         </div>
 
